@@ -172,7 +172,7 @@ app.get('/resumes', async (req, res) => {
 
     res.status(200).json({ resumes: resumesData });
   } catch (error) {
-    console.error(error);
+    console.error("resume error");
     res.status(500).send('Error retrieving resumes data');
   }
 });
