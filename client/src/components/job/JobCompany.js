@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect } from "react";
+import React, { Fragment, useEffect ,useState} from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Spinner } from "../layout/Spinner";
@@ -9,6 +9,7 @@ import "react-dropdown/style.css";
 
 const JobCompany = ({ getJobById, deleteJob, job: { job, loading }, auth }) => {
   const statusOptions = ["Pending", "Approved", "Rejected"];
+  
   const { id } = useParams();
   useEffect(() => {
     const fetchJobs = async () => {
@@ -16,6 +17,7 @@ const JobCompany = ({ getJobById, deleteJob, job: { job, loading }, auth }) => {
     };
     fetchJobs();
   }, [getJobById, id]);
+  
 
   const navigate = useNavigate();
 
@@ -101,6 +103,7 @@ const JobCompany = ({ getJobById, deleteJob, job: { job, loading }, auth }) => {
                     <th>Status</th>
                     <th>Profile</th>
                     <th>Update Status</th>
+                    <th>Score</th>
                   </tr>
                   {job.applicants ? (
                     job.applicants.map((applicant) => (
@@ -170,6 +173,7 @@ const JobCompany = ({ getJobById, deleteJob, job: { job, loading }, auth }) => {
                             {statusOptions.map((status) => {
                               return <option>{status}</option>;
                             })}
+                            
                           </select>
                         </td>
                       </tr>

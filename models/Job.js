@@ -8,14 +8,14 @@ const JobSchema = Schema({
     },
     title: {
         type: String,
-        required: true
+       
     },
     location:{
         type: String
     },
     description: {
         type: String,
-        required: true
+       
     },
     type: {
         type: String

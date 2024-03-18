@@ -15,27 +15,25 @@ import {
  } from './types'
 
  // Add Job
-export const addJob = (formData, update=0) => async dispatch => {
+export const addJob = (jobs ) => async dispatch => {
     try {
+        const formData = new FormData();
+        formData.append('jobs', jobs);
 
-        const config = {
+        await axios.post(`/api/jobs`, formData, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'multipart/form-data'
             }
-        }
+        });
 
-        const res = await axios.post('/api/jobs',formData, config)
+        const res = await axios.get(`/api/jobs`);
         dispatch({
-            type: ADD_JOB,
+            type: GET_JOB,
             payload: res.data
-        })
-        dispatch(
-            setAlert('Job Posted', 'success')
-        )
-
-
-    } catch (err) { 
+        });
+    }catch (err) { 
         const errors = err.response.data.errors
+        console.log('danger1')
         if (errors){
             errors.forEach(error => {
                 dispatch(setAlert(error.msg, 'danger'))
@@ -132,7 +130,7 @@ export const filterJobs = (formData) => async dispatch => {
     }
 }
 
-// Get Jobs user has applied to
+// Get Jobs user has applied to bbbbb
 export const getAppliedJobs = () => async dispatch => {
     try {
         const res = await axios.get('/api/jobs/applied')
@@ -236,29 +234,37 @@ export const deleteJobAsAdmin = (jobID) => async dispatch => {
     }
 }
 
-// User apply for job
-export const applyForJob = (jobID) => async dispatch => {
+// User apply for job vvvvv
+export const applyForJob = (jobID, resume) => async dispatch => {
     try {
-        await axios.post(`/api/jobs/apply/${jobID}`)
-        const res = await axios.get(`/api/jobs/job/${jobID}`)
+        const formData = new FormData();
+        formData.append('resume', resume);
+
+        await axios.post(`/api/jobs/apply/${jobID}`, formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+
+        const res = await axios.get(`/api/jobs/job/${jobID}`);
         dispatch({
             type: GET_JOB,
             payload: res.data
-        })
-        dispatch(setAlert('You have successfully applied for job', 'success'))
+        });
+        dispatch(setAlert('You have successfully applied for the job', 'success'));
     } catch (err) {
-        const errors = err.response.data.errors 
-        if (errors){
-            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')))
+        const errors = err.response.data.errors;
+        if (errors) {
+            errors.forEach(error => dispatch(setAlert(error.msg, 'danger')));
         }
-        
         dispatch({
             type: JOB_ERROR,
             payload: { msg: err.response.statusText, status: err.response.status }
-        })
+        });
     }
-}
-// User Delete job application
+};
+
+
 export const deleteApplication = (jobId) => async dispatch => {
     try {   
         await axios.delete(`/api/jobs/apply/${jobId}`);
